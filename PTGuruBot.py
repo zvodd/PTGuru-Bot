@@ -10,7 +10,7 @@ logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s 
 log = logging.getLogger()
 
 client = discord.Client()
-author = "```Learning Penetration Testing\n\nThe Penetration Testing Community```"
+author = "```Learning Penetration Testing\n\nThe Friendly Penetration Testing Community```"
 Help = "```!!author\n!!joinredteam5```"
 cve_feed = "http://bit.ly/2k97VtF"
 news_channel = "275289702985367564"
