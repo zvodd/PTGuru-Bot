@@ -33,7 +33,7 @@ async def post_exploits():
 @client.event
 async def on_message(message):
     log.info("{} Sent:".format(message.author))
-    log.info(message.content)
+    log.info("Message: {}".format(message.content))
 
     if message.content.startswith("!!author"):
         await client.send_message(message.channel, author)
