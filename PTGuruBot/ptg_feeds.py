@@ -12,7 +12,7 @@ log = logging.getLogger()
 def NEWS(item):
     args = (item.title, item.link)
     fstr = "**{}**\n\n{}"
-    chan = cfg.CTF_CHANNEL
+    chan = cfg.NEWS_CHANNEL
     return (fstr.format(*args), chan)
 
 def CVE(item):
@@ -46,6 +46,7 @@ async def updatefeeds():
 # Post a feed.
 async def post_feeds(feed, post_format=NEWS, limit=300,):
     logging.info("post_feeds: {0!a}".format(feed))
+    ## TODO: decouple/desync parse and post
     for entry in feed.parse(limit):
         msg, channel = post_format(entry)
         logging.debug(msg)    

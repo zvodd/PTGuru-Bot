@@ -20,7 +20,7 @@ with open("assets/newslist.txt", "r") as fh:
 
 # Channel IDs
 NEWS_CHANNEL = config.get('channels', 'news_channel')
-VULNERABILITY_CHANNEL = config.get('channels', 'vulnerability_channel')
+CVE_CHANNEL = config.get('channels', 'vulnerability_channel')
 CTF_CHANNEL = config.get('channels', 'ctf_channel')
 
 # New Post Limit, per feed.
