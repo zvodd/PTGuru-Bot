@@ -1,2 +1,4 @@
-_secret.token.txt
+_secret*
 gurubot-log.txt
+__pycache__/
+settings.cfg
