@@ -7,52 +7,71 @@ from pprint import pprint, pformat
 
 class FeedTacker(object):
     """
-    Takes a rssfeed url, retrives entries on each call of parse,
+    Takes a rssfeed url, retrive entries with tracked_parse().
     only returning new entries on each subsiquent call.
-
     Only remebers entries from last parse call to determin "newness".
-
     """
     def __init__(self, feedurl):
         self.feedurl = feedurl
-        self.seen_ids = None
+        self.entries = []
+        self.entry_ids = []
+        self.seen_ids = []
+        self.new_entries = []
 
-    def parse(self, limit=None):
-        # load feed 
-        entries = feedparser.parse(self.feedurl).entries
-        entry_ids = [_id_ent(ent) for ent in entries]
-        #if seen_ids is empty (first run)
-        if not self.seen_ids:
-            #add all entries to seen_ids
-            self.seen_ids = entry_ids
-            new_entries = entries
-        else:
-            #filter already seen items
-            new_entries = [e for e in entries if _id_ent(e) not in self.seen_ids]
 
-            # add new_entries to seen_ids
-            self.seen_ids += map(_id_ent, new_entries)
+    def parse(self):
+        self.entries = feedparser.parse(self.feedurl).entries
+        self.entry_ids = [self.eid(ent) for ent in self.entries]
+        return self.entries
 
-            # remake the seen_ids list without lost/dead entries
-            new_seen = []
-            for eid in self.seen_ids:
-                if eid in entry_ids:
-                    new_seen.append(eid)
-            self.seen_ids = new_seen
 
-            # delta = len(self.seen_ids) - len(new_entries)
-            # self.seen_ids = self.seen_ids[delta:]
+    def tracked_parse(self, limit=None, dont_clean=False):
+        self.parse()
+        self.filter_updated(dont_clean)
 
         if limit:
-            res = new_entries[:min(len(new_entries), limit)]
+            return self.new_entries[:min(len(self.new_entries), limit)]
         else:
-            res = new_entries
-        return res
+            return self.new_entries
+
+
+    def filter_updated(self, dont_clean=False):
+        #if seen_ids is empty (first run)
+        if len(self.seen_ids) < 1:
+            #add all entries to seen_ids
+            self.seen_ids = self.entry_ids
+            filtered_ents = self.entries
+        else:
+            #filter already seen items
+            filtered_ents = [e for e in self.entries if self.eid(e) not in self.seen_ids]
+
+            # add filtered_ents to seen_ids
+            self.seen_ids += map(self.eid, filtered_ents)
+
+            if dont_clean:
+                pass
+            else:
+                self.clean()
+
+        self.new_entries = filtered_ents
+
+
+    def clean(self):
+        # remake the seen_ids list without lost/dead entries
+        new_seen = []
+        for eid in self.seen_ids:
+            if eid in self.entry_ids:
+                new_seen.append(eid)
+        self.seen_ids = new_seen
+
+
+    def eid(self, ent):
+        "Hash feed entry"
+        return hashlib.md5((ent.link+ent.title).encode('utf-8')).digest()
+
 
     def __repr__(self):
-        return '%s:%s' % (self.__class__, self.feedurl)
+        return '{}:{}'.format(self.__class__, self.feedurl)
 
-def _id_ent(ent):
-    "Hash feed entry"
-    return hashlib.md5((ent.link+ent.title).encode('utf-8')).digest()
+
     # return ent.title

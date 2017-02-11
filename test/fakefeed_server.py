@@ -32,18 +32,20 @@ J2ENV = Environment(
 )
 
 
+# global GLOBAL_ITEMS
+GLOBAL_ITEMS = {}
 
 
 @app.route('/feed/<id>')
 def render_feed(id='DEFAULT'):
-    global GLOBAL_ITEMS
+    # global GLOBAL_ITEMS
     res = J2ENV.get_template("base.xml").render(items=GLOBAL_ITEMS.get(id,GLOBAL_ITEMS['DEFAULT']))
     return(res)
 
 
 @app.route('/set/<start>/<end>/<id>')
 def set_feed(start,end,id):
-    global GLOBAL_ITEMS
+    # global GLOBAL_ITEMS
     GLOBAL_ITEMS[id] = gen_items(int(start),int(end))
     return "updated feed"
 
@@ -61,7 +63,7 @@ def gen_items(start,end):
     return items
 
 
-global GLOBAL_ITEMS
+
 GLOBAL_ITEMS = {'DEFAULT':gen_items(0, 10)}
 
 if __name__ == '__main__':

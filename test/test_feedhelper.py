@@ -20,7 +20,7 @@ class TestFeedTracker(unittest.TestCase):
     def setUpClass(cls):
         exe = sys.executable
         serverpath = os.path.join(TEST_SERVER_LOCATION, TEST_SERVER_FILENAME)
-        print("TestFeedTracker: starting test server...")
+        print("TestFeedTracker: starting rss_feed test server...")
         args = [exe, serverpath, '0', '0', 'server',
                  TEST_SERVER_HOSTNAME, TEST_SERVER_PORT]
         cls.flask_server = subprocess.Popen(args)
@@ -36,31 +36,34 @@ class TestFeedTracker(unittest.TestCase):
         process.kill()
         print("TestFeedTracker: done")
 
-    def _test_updates(self):
+    def test_updates2(self):
         feed = FeedTacker(FEED_URL)
 
         requests.get(SET_URL+"0/5/x")
-        ents = feed.parse()
-        titles = [e.title for e in ents]
+        feed.tracked_parse()
+        titles = [e.title for e in feed.entries]
+        print (titles)
         self.assertEqual(titles, ['0', '1', '2', '3', '4'])
 
         requests.get(SET_URL+"0/10/x")
-        ents = feed.parse()
-        titles = [e.title for e in ents]
+        feed.tracked_parse()
+        titles = [e.title for e in feed.entries]
+        print (titles)
         self.assertEqual(titles, ['5', '6', '7', '8', '9'])
 
         requests.get(SET_URL+"5/15/x")
-        ents = feed.parse()
-        titles = [e.title for e in ents]
+        feed.tracked_parse()
+        titles = [e.title for e in feed.entries]
+        print (titles)
         self.assertEqual(titles, ['10', '11', '12', '13', '14'])
 
 
-    def test_updates2(self):
+    def test_updates1(self):
         requests.get(SET_URL+"0/5/x")
 
         feed = FeedTacker(FEED_URL)
-        ents = feed.parse()
-        titles = [e.title for e in ents]
+        feed.tracked_parse()
+        titles = [e.title for e in feed.entries]
         print (titles)
         self.assertEqual(titles, ['0', '1', '2', '3', '4'])
 
@@ -68,8 +71,8 @@ class TestFeedTracker(unittest.TestCase):
         for _ in range(0,4):
             y = random.randrange(x+1, x+11)
             requests.get(SET_URL+"{}/{}/x".format(x,y))
-            ents = feed.parse()
-            titles = [e.title for e in ents]
+            feed.tracked_parse()
+            titles = [e.title for e in feed.entries]
             print (titles)
             self.assertEqual(titles, [str(i) for i in range(x,y)])
             x += y - x
