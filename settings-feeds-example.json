@@ -1,0 +1,44 @@
+{
+	"feed_list": [{
+		"defaut_feed_setting": {
+			"channel_id": "XXX",
+			"format_str": "{title}:{link}",
+			"format_args": {
+				"title": "raw",
+				"link": "url",
+				"descryption": "remove_tags"
+			},
+
+		},
+		"feeds": [{
+			"url": "http://localhost:5000/feed/0"
+		}, {
+			"url": "http://localhost:5000/feed/1"
+		}]
+
+	}, {
+		"defaut_feed_setting": {
+			"channel_id": "XXX",
+			"format_str": "{title}:{link}",
+			"format_args": {
+				"title": "raw",
+				"link": "url",
+				"descryption": "remove_tags"
+			},
+
+		},
+		"feeds": [{
+			"url": "http://localhost:5000/feed/2",
+			"channel_id": "XXX",
+			"format_str": "{title}:\n\t{link}",
+			"format_args": {
+				"title": "remove_tags",
+				"link": "url",
+				"descryption": "remove_tags"
+			}
+		}{
+			"url": "http://localhost:5000/feed/3"
+		}]
+
+	}]
+}

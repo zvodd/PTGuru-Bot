@@ -2,3 +2,4 @@ _secret*
 gurubot-log.txt
 __pycache__/
 settings.cfg
+settings-feeds.json
